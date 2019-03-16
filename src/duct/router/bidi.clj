@@ -1,4 +1,4 @@
-(ns duct.router.ataraxy
+(ns duct.router.bidi
   (:require [ataraxy.core :as ataraxy]
             [ataraxy.response :as resp]
             [clojure.set :as set]
@@ -24,10 +24,10 @@
 (defn- add-inferred-handlers [handler-map keys-to-add]
   (reduce (fn [m k] (assoc m k (ig/ref k))) handler-map keys-to-add))
 
-(defmethod ig/prep-key :duct.router/ataraxy [_ options]
+(defmethod ig/prep-key :duct.router/bidi [_ options]
   (-> options
       (update :handlers #(merge default-handlers %))
       (update :handlers add-inferred-handlers (missing-handlers options))))
 
-(defmethod ig/init-key :duct.router/ataraxy [_ options]
+(defmethod ig/init-key :duct.router/bidi [_ options]
   (ataraxy/handler options))

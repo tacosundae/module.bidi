@@ -1,4 +1,4 @@
-(ns duct.module.ataraxy
+(ns duct.module.bidi
   (:require [ataraxy.core :as ataraxy]
             [duct.core :as duct]
             [duct.core.merge :as merge]
@@ -20,7 +20,7 @@
 (defn- infer-middleware [routes project-ns]
   (infer-keys (middleware-keys routes) (str project-ns ".middleware")))
 
-(defmethod ig/init-key :duct.module/ataraxy [_ routes]
+(defmethod ig/init-key :duct.module/bidi [_ routes]
   (fn [config]
     (let [project-ns (:duct.core/project-ns config)
           routes     (dissoc routes ::duct/requires)
@@ -30,7 +30,7 @@
        config
        {:duct.handler/root
         {:router (ig/ref :duct.router/ataraxy)}
-        :duct.router/ataraxy
+        :duct.router/bidi
         {:routes     (with-meta routes {:demote true})
          :handlers   (with-meta handlers {:demote true})
          :middleware (with-meta middleware {:demote true})}}))))
