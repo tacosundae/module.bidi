@@ -29,7 +29,7 @@
       (duct/merge-configs
        config
        {:duct.handler/root
-        {:router (ig/ref :duct.router/ataraxy)}
+        {:router (ig/ref :duct.router/bidi)}
         :duct.router/bidi
         {:routes     (with-meta routes {:demote true})
          :handlers   (with-meta handlers {:demote true})

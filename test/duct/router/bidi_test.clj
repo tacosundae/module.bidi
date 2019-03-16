@@ -1,8 +1,8 @@
-(ns duct.router.ataraxy-test
+(ns duct.router.bidi-test
   (:require [ataraxy.response :as response]
             [clojure.test :refer :all]
             [duct.core :as duct]
-            [duct.router.ataraxy :as ataraxy]
+            [duct.router.bidi :as bidi]
             [integrant.core :as ig]))
 
 (defn hello-handler [{[_ name] :ataraxy/result}]
@@ -12,10 +12,10 @@
   [::response/ok (duct/resource "duct/router/test.txt")])
 
 (deftest router-test
-  (let [config  {:duct.router/ataraxy
+  (let [config  {:duct.router/bidi
                  {:routes   '{[:get "/hello/" name] [:hello name]}
                   :handlers {:hello hello-handler}}}
-        handler (:duct.router/ataraxy (ig/init config))]
+        handler (:duct.router/bidi (ig/init config))]
     (is (= (handler {:request-method :get, :uri "/hello/world"})
            {:status 200, :headers {}, :body "Hello world"}))))
 
@@ -23,8 +23,8 @@
   (let [routes '{[:get "/bar" id] [:foo/bar id]
                  [:get "/baz"]    [:foo/baz]}]
     (testing "no existing handlers"
-      (is (= (ig/prep {:duct.router/ataraxy {:routes routes}})
-             {:duct.router/ataraxy
+      (is (= (ig/prep {:duct.router/bidi {:routes routes}})
+             {:duct.router/bidi
               {:routes   routes
                :handlers
                {:foo/bar                        (ig/ref :foo/bar)
@@ -37,10 +37,10 @@
                 :ataraxy.error/failed-spec      (ig/ref :duct.handler.static/bad-request)}}})))
 
     (testing "some existing handlers"
-      (is (= (ig/prep {:duct.router/ataraxy
+      (is (= (ig/prep {:duct.router/bidi
                        {:routes   routes
                         :handlers {:foo/bar (ig/ref :foo/custom)}}})
-             {:duct.router/ataraxy
+             {:duct.router/bidi
               {:routes   routes
                :handlers
                {:foo/bar                        (ig/ref :foo/custom)
@@ -53,9 +53,9 @@
                 :ataraxy.error/failed-spec      (ig/ref :duct.handler.static/bad-request)}}})))))
 
 (deftest resource-test
-  (let [config   {:duct.router/ataraxy
+  (let [config   {:duct.router/bidi
                   {:routes   '{[:get "/"] [:foo name]}
                    :handlers {:foo resource-handler}}}
-        handler  (:duct.router/ataraxy (ig/init config))
+        handler  (:duct.router/bidi (ig/init config))
         response (handler {:request-method :get, :uri "/"})]
     (is (= (-> response :body slurp) "Hello World\n"))))

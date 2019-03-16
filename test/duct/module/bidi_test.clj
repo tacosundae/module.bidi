@@ -1,7 +1,7 @@
-(ns duct.module.ataraxy-test
+(ns duct.module.bidi
   (:require [clojure.test :refer :all]
             [duct.core :as core]
-            [duct.module.ataraxy :as ataraxy]
+            [duct.module.bidi :as bidi]
             [integrant.core :as ig]))
 
 (core/load-hierarchy)
@@ -16,7 +16,7 @@
   #(assoc-in (handler %) [:headers "X-Quz"] "quz"))
 
 (def basic-config
-  {:duct.module/ataraxy
+  {:duct.module/bidi
    '{["/bar" id] ^:quz [:bar id]
      ["/baz"]    [:test/baz]}
    :duct.profile/base
@@ -30,7 +30,7 @@
 (def updated-handlers-config
   (-> basic-config
       (assoc-in [:duct.profile/base :foo.handler/not-found] not-found-handler)
-      (assoc-in [:duct.profile/base :duct.router/ataraxy]
+      (assoc-in [:duct.profile/base :duct.router/bidi]
                 {:handlers {:ataraxy.error/unmatched-path
                             (ig/ref :foo.handler/not-found)}})))
 
@@ -38,8 +38,8 @@
   (testing "basic config"
     (is (= (merge (:duct.profile/base basic-config)
                   {:duct.handler/root
-                   {:router (ig/ref :duct.router/ataraxy)}
-                   :duct.router/ataraxy
+                   {:router (ig/ref :duct.router/bidi)}
+                   :duct.router/bidi
                    {:routes
                     '{["/bar" id] ^:quz [:bar id]
                       ["/baz"]    [:test/baz]}
@@ -53,8 +53,8 @@
   (testing "updated handlers"
     (is (= (merge (:duct.profile/base updated-handlers-config)
                   {:duct.handler/root
-                   {:router (ig/ref :duct.router/ataraxy)}
-                   :duct.router/ataraxy
+                   {:router (ig/ref :duct.router/bidi)}
+                   :duct.router/bidi
                    {:routes
                     '{["/bar" id] ^:quz [:bar id]
                       ["/baz"]    [:test/baz]}
